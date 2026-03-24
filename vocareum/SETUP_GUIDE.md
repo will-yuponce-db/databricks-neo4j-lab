@@ -47,13 +47,15 @@ Click **Configure Workspace** → **Files** in the Assignment tab.
 
 ### Complete File Mapping
 
-Upload from `vocareum/` in this repo to Vocareum filesystem:
+Run `./upload.sh` to build and upload everything automatically, or upload manually.
+
+The upload script builds the notebook archive from the repo root (`Lab_2_Databricks_ETL_Neo4j/`, `Lab_3_Semantic_Search/`) so notebooks are never duplicated.
 
 | Local file | Upload to | Purpose |
 |------------|-----------|---------|
 | `courseware/neo4j-databricks-workshop.cfg` | `/voc/private/courseware/` | Course config |
-| `courseware/neo4j-databricks-workshop.dat` | `/voc/private/courseware/` | Lab notebooks (`.dat` prevents Vocareum auto-extract) |
-| `courseware/aircraft_digital_twin_data.dat` | `/voc/private/courseware/` | CSV data, 3.4MB (`.dat` prevents auto-extract) |
+| *(built by upload.sh)* | `/voc/private/courseware/neo4j-databricks-workshop.zip` | Lab notebooks |
+| `courseware/aircraft_digital_twin_data.zip` | `/voc/private/courseware/aircraft_digital_twin_data.dat` | CSV data, 3.4MB (`.dat` prevents auto-extract) |
 | `scripts/workspace_init.sh` | `/voc/scripts/` | Shell wrapper |
 | `scripts/user_setup.sh` | `/voc/scripts/` | Shell wrapper |
 | `scripts/lab_setup.sh` | `/voc/scripts/` | Shell wrapper |
@@ -66,7 +68,7 @@ Upload from `vocareum/` in this repo to Vocareum filesystem:
 | `courseware/dlt_fleet_etl.py` | `/voc/private/courseware/` | DLT notebook (bronze→silver→gold) |
 | `docs/README.md` | `/voc/docs/` | Iframe instructions |
 
-**Note:** Upload `scripts/python/dbacademy.py` to `/voc/scripts/python/`. This is a patched version (fixes `delta_sharing_recipient_token_lifetime` and `self.w` None guard). If the template already has one, **overwrite it** with ours.
+**Note:** `dbacademy` is installed via `pip install dbacademy` at runtime by each script. No need to upload it.
 
 ## What Happens Automatically
 
@@ -217,7 +219,7 @@ For direct enrollment (LTI disabled):
 | Error | Cause | Fix |
 |-------|-------|-----|
 | `self.w` is None | `VOC_DB_WORKSPACE_URL` or `VOC_DB_API_TOKEN` not set | Vocareum provisioning failed — check workspace exists |
-| `delta_sharing_recipient_token_lifetime_in_seconds` = 0 | Databricks no longer allows infinite token lifetime | Patch dbacademy.py line to use `86400` |
+| `delta_sharing_recipient_token_lifetime_in_seconds` = 0 | Databricks no longer allows infinite token lifetime | Pin a dbacademy version that defaults to `86400` |
 | `Root storage credential does not exist` | Metastore exists but credential was deleted | Delete metastore and re-run init |
 | `Permission assignment APIs not available` | Workspace not using identity federation | Use workspace-level SCIM instead of account-level |
 | CSV upload fails | Volume doesn't exist yet | Ensure catalog/schema/volume creation SQL runs first |

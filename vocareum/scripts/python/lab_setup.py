@@ -8,9 +8,10 @@ Resumes resources:
 - Returns redirect URL to entry notebook
 """
 import os
+import subprocess
 import sys
 
-sys.path.insert(0, os.path.dirname(__file__))
+subprocess.check_call([sys.executable, "-m", "pip", "install", "dbacademy", "-q"])
 
 from dbacademy import voc_init
 

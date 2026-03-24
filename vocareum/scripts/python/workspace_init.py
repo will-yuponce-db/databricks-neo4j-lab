@@ -12,7 +12,10 @@ import os
 import sys
 import zipfile
 
-# dbacademy.py lives in the same directory
+import subprocess
+subprocess.check_call([sys.executable, "-m", "pip", "install", "dbacademy", "-q"])
+
+# workshop_data_setup is local
 sys.path.insert(0, os.path.dirname(__file__))
 
 from dbacademy import voc_init
